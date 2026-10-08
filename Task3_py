@@ -1,0 +1,78 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load cleaned dataset
+df = pd.read_csv("cleaned_customer_data.csv")
+
+# Create one window with 5 charts
+fig, axes = plt.subplots(3, 2, figsize=(12, 14))
+
+
+# 1. BAR CHART
+city_sales = df.groupby("City")["PurchaseAmount"].sum()
+
+axes[0, 0].bar(city_sales.index, city_sales.values)
+axes[0, 0].set_title("Total Purchase by City")
+axes[0, 0].set_xlabel("City")
+axes[0, 0].set_ylabel("Purchase Amount")
+axes[0, 0].tick_params(axis="x", rotation=45)
+
+
+# 2. PIE CHART
+city_count = df["City"].value_counts()
+
+axes[0, 1].pie(
+    city_count,
+    labels=city_count.index,
+    autopct="%1.1f%%"
+)
+
+axes[0, 1].set_title("Customers by City")
+
+
+# 3. HISTOGRAM
+axes[1, 0].hist(df["PurchaseAmount"], bins=5)
+
+axes[1, 0].set_title("Purchase Amount Distribution")
+axes[1, 0].set_xlabel("Purchase Amount")
+axes[1, 0].set_ylabel("Number of Customers")
+
+
+# 4. SCATTER PLOT
+axes[1, 1].scatter(
+    df["Age"],
+    df["PurchaseAmount"]
+)
+
+axes[1, 1].set_title("Age vs Purchase Amount")
+axes[1, 1].set_xlabel("Age")
+axes[1, 1].set_ylabel("Purchase Amount")
+
+
+# 5. LINE CHART
+# Using customer number instead of CustomerID
+# This avoids CustomerID KeyError
+
+customer_number = range(1, len(df) + 1)
+
+axes[2, 0].plot(
+    customer_number,
+    df["PurchaseAmount"],
+    marker="o"
+)
+
+axes[2, 0].set_title("Customer Purchase Trend")
+axes[2, 0].set_xlabel("Customer Number")
+axes[2, 0].set_ylabel("Purchase Amount")
+
+
+# Remove empty sixth chart area
+axes[2, 1].axis("off")
+
+
+# Adjust spacing
+plt.tight_layout()
+
+
+# Display all charts
+plt.show()

@@ -1,0 +1,52 @@
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+# Website
+url = "https://books.toscrape.com/"
+
+# Send request
+response = requests.get(url)
+
+print("Status Code:", response.status_code)
+
+# Parse webpage
+soup = BeautifulSoup(
+    response.text,
+    "html.parser"
+)
+
+books = []
+
+# Extract book information
+for book in soup.select("article.product_pod"):
+
+    title = book.h3.a["title"]
+
+    price = book.select_one(
+        ".price_color"
+    ).text.strip()
+
+    rating = book.select_one(
+        "p.star-rating"
+    )["class"][1]
+
+    books.append({
+        "Title": title,
+        "Price": price,
+        "Rating": rating
+    })
+
+# Create DataFrame
+df = pd.DataFrame(books)
+
+print("\nExtracted Book Data:")
+print(df.head(10))
+
+# Save CSV
+df.to_csv(
+    "books_data.csv",
+    index=False
+)
+
+print("\nData saved successfully!")

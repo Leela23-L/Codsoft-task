@@ -1,0 +1,61 @@
+import pandas as pd
+
+df = pd.read_csv("cleaned_customer_data.csv")
+
+# Create age groups
+def age_group(age):
+    if age < 25:
+        return "Young"
+    elif age < 30:
+        return "Adult"
+    else:
+        return "Senior"
+
+df["AgeGroup"] = df["Age"].apply(age_group)
+
+# Create customer value groups
+def customer_value(amount):
+    if amount >= 2000:
+        return "High Value"
+    elif amount >= 1500:
+        return "Medium Value"
+    else:
+        return "Low Value"
+
+df["CustomerValue"] = df["PurchaseAmount"].apply(
+    customer_value
+)
+
+print("Customer Segmentation:")
+print(
+    df[
+        ["Name", "Age", "AgeGroup",
+         "PurchaseAmount", "CustomerValue"]
+    ]
+)
+
+# Most valuable customers
+print("\nMost Valuable Customers:")
+
+print(
+    df.sort_values(
+        "PurchaseAmount",
+        ascending=False
+    )[
+        ["Name", "City", "PurchaseAmount"]
+    ]
+)
+
+# Average purchase by age group
+print("\nAverage Purchase by Age Group:")
+
+print(
+    df.groupby("AgeGroup")["PurchaseAmount"].mean()
+)
+
+# Total purchase by city
+print("\nTotal Purchase by City:")
+
+print(
+    df.groupby("City")["PurchaseAmount"].sum()
+)

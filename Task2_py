@@ -1,0 +1,39 @@
+import pandas as pd
+
+df = pd.read_csv("cleaned_customer_data.csv")
+
+# Basic information
+print("Dataset Shape:")
+print(df.shape)
+
+# Descriptive statistics
+print("\nDescriptive Statistics:")
+print(df.describe())
+
+# Average purchase
+print("\nAverage Purchase Amount:")
+print(df["PurchaseAmount"].mean())
+
+# Maximum purchase
+print("\nMaximum Purchase:")
+print(df["PurchaseAmount"].max())
+
+# Minimum purchase
+print("\nMinimum Purchase:")
+print(df["PurchaseAmount"].min())
+
+# Total purchase
+print("\nTotal Purchase:")
+print(df["PurchaseAmount"].sum())
+
+# Customers by city
+print("\nCustomers by City:")
+print(df["City"].value_counts())
+
+# Average purchase by city
+print("\nAverage Purchase by City:")
+print(df.groupby("City")["PurchaseAmount"].mean())
+
+# Correlation
+print("\nAge and Purchase Correlation:")
+print(df[["Age", "PurchaseAmount"]].corr())
